@@ -1,22 +1,24 @@
+// src/App.jsx
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Profile from './pages/Profile';
 import Header from './components/Header';
-import MainDashboard from './components/MainDashboard';
-import Search from './components/Search';
-import Footer from './components/Footer';
-import { MapProvider } from './context/MapContext'; // Ensure the path is correct
+import PostRide from './pages/PostRide';
+import JoinRide from './pages/JoinRide';
 
 function App() {
   return (
-    <MapProvider>
-      <div className='relative'>
+    <Router>
+      <div className="relative">
         <Header />
-        <div className='relative'>
-          <MainDashboard />
-          <Search />
-        </div>
-        <Footer />
+        <Routes>
+        <Route path="/" element={<JoinRide />} />
+        <Route path="/joinride" element={<JoinRide />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/postride" element={<PostRide />} />
+        </Routes>
       </div>
-    </MapProvider>
+    </Router>
   );
 }
 

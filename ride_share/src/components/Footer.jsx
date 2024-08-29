@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Footer = () => {
+function Footer() {
   return (
-    <footer style={{ padding: '10px', backgroundColor: '#333', color: '#fff', textAlign: 'center' }}>
-      © 2024 RideShare App
+    <footer className="footer">
+      <p>© 2024 RideShare, Inc.</p>
     </footer>
   );
-};
+}
 
 export default Footer;

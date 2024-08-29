@@ -1,21 +1,54 @@
 import React from 'react';
+import { Box, Typography, Button } from '@mui/material';
 import InputItem from './InputItem';
 
 function Search() {
   return (
-    <div className='fixed top-24 right-4 p-4 sm:p-6 md:p-8 rounded-xl bg-white w-full sm:w-96 border border-gray-300 shadow-lg transform hover:scale-105 transition-transform duration-300'>
-      <p className='text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 text-gray-800'>
+    <Box
+      sx={{
+        position: 'fixed',
+        top: '6rem',
+        right: '1rem',
+        padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+        borderRadius: '1rem',
+        backgroundColor: 'white',
+        width: { xs: '100%', sm: '24rem' },
+        border: '1px solid',
+        borderColor: 'grey.300',
+        boxShadow: 3,
+        transform: 'scale(1)',
+        transition: 'transform 0.3s',
+        '&:hover': {
+          transform: 'scale(1.05)',
+        },
+      }}
+    >
+      <Typography variant="h4" component="p" gutterBottom sx={{ fontWeight: '500' }}>
         Where to Next?
-      </p>
-      <div className='space-y-4 sm:space-y-5'>
+      </Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <InputItem type='source' />
         <InputItem type='destination' />
-        <button className='p-2 sm:p-3 bg-blue-600 hover:bg-blue-700 w-full text-white font-semibold rounded-lg transition-colors duration-300 
-        shadow-md hover:shadow-xl transform hover:scale-105'>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          sx={{
+            boxShadow: 2,
+            '&:hover': {
+              boxShadow: 4,
+            },
+            transform: 'scale(1)',
+            transition: 'transform 0.3s',
+            '&:hover': {
+              transform: 'scale(1.05)',
+            },
+          }}
+        >
           Search
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Box>
   );
 }
 

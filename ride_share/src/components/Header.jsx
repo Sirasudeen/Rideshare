@@ -1,34 +1,98 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Box, Typography, Button, IconButton } from '@mui/material';
 import LocalTaxiIcon from '@mui/icons-material/LocalTaxi';
 
 function Header() {
   const headerMenu = [
     {
       id: 1,
-      name: 'Ride',
+      name: 'Join Ride',
       icon: LocalTaxiIcon,
+      path: '/joinride',
+      style: { backgroundColor: '#405D72', color: 'white', borderColor: '#405D72'}, // Grey background for Join Ride
+    },
+    {
+      id: 2,
+      name: 'Post Ride',
+      icon: LocalTaxiIcon,
+      path: '/postride',
+      style: { backgroundColor: 'white', color: '#021526', borderColor: '#021526' }, // White background for Post Ride
     },
   ];
 
   return (
-    <div className='bg-[#111] text-white p-4 shadow-md fixed w-full top-0 left-0 z-50' style={{ fontFamily: 'Poppins, sans-serif' }}>
-      <div className='container mx-auto flex items-center justify-between'>
-        <p className='pr-8 text-3xl font-bold text-gray-200 new-amsterdam-regular'>RIDESHARE</p>
-        <div className='flex gap-8 items-center flex-grow'>
+    <Box
+      sx={{
+        backgroundColor: '#021526',
+        color: 'white',
+        p: 2,
+        boxShadow: 3,
+        position: 'fixed',
+        width: '100%',
+        top: 0,
+        left: 0,
+        zIndex: 50,
+        fontFamily: 'New Amsterdam, sans-serif',
+        // backgroundImage: 'url("https://rideshare-s3.s3.ap-south-1.amazonaws.com/rideshare_banner.jpeg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundBlendMode: 'overlay',
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: 1200, mx: 'auto' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <img
+            src="https://rideshare-s3.s3.ap-south-1.amazonaws.com/rideshare_icon.png"
+            alt="Rideshare Icon"
+            style={{ width: 48, height: 48, marginRight: 8 }}
+          />
+          <Typography
+            variant="h4"
+            sx={{ color: '#e0e0e0', fontWeight: 'bold', mr: 4, textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)', fontFamily: 'New Amsterdam', letterSpacing: 4}}
+          >
+            RIDESHARE
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexGrow: 1 }}>
           {headerMenu.map((item) => (
-            <div key={item.id} className='flex gap-2 items-center'>
-              {React.createElement(item.icon, { className: 'text-white text-xl hover:text-blue-400 transition-colors duration-300' })}
-              <span className='text-lg font-medium hover:text-blue-400 transition-colors duration-300'>{item.name}</span>
-            </div>
+            <Button
+              key={item.id}
+              component={Link}
+              to={item.path}
+              startIcon={<item.icon sx={{ color: item.id === 1 ? 'white' : '#021526' }} />}
+              sx={{
+                px: 2,
+                py: 1,
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: item.style.borderColor,
+                backgroundColor: item.style.backgroundColor,
+                color: item.style.color,
+                '&:hover': {
+                  backgroundColor: item.id === 1 ? '#1e3a52' : '#f0f0f0',
+                },
+              }}
+            >
+              <Typography variant="body1" sx={{ fontWeight: 'medium', fontFamily: 'New Amsterdam', fontSize: '20px', letterSpacing: 1.3 }}>
+                {item.name}
+              </Typography>
+            </Button>
           ))}
-        </div>
-        <div className='flex items-center gap-4'>
-          <a href="#" className='text-white hover:text-blue-400 transition-colors duration-300'>Profile</a>
-          <a href="#" className='text-white hover:text-blue-400 transition-colors duration-300'>Settings</a>
-          <a href="#" className='text-white hover:text-blue-400 transition-colors duration-300'>Logout</a>
-        </div>
-      </div>
-    </div>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 2}}>
+          <IconButton component={Link} to="/profile" sx={{ color: 'white', '&:hover': { color: '#90caf9' } }}>
+            <Typography variant="body1" sx={{ fontFamily: 'New Amsterdam', fontSize: '23px' }}>Profile</Typography>
+          </IconButton>
+          <IconButton href="#" sx={{ color: 'white', '&:hover': { color: '#90caf9' } }}>
+            <Typography variant="body1" sx={{ fontFamily: 'New Amsterdam', fontSize: '23px' }}>Settings</Typography>
+          </IconButton>
+          <IconButton href="#" sx={{ color: 'white', '&:hover': { color: '#90caf9' } }}>
+            <Typography variant="body1" sx={{ fontFamily: 'New Amsterdam', fontSize: '23px' }}>Logout</Typography>
+          </IconButton>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

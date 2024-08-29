@@ -1,7 +1,6 @@
-// src/components/MainDashboard.jsx
-
 import React, { useEffect, useRef } from 'react';
 import { useMap } from '../context/MapContext';
+import { Box } from '@mui/material';
 
 const MainDashboard = () => {
   const mapRef = useRef(null);
@@ -44,7 +43,8 @@ const MainDashboard = () => {
     }
   }, [map, markerPosition]);
 
-  return <div id="map" style={{ height: '100vh', width: '100%' }} ref={mapRef}></div>;
+  return <Box id="map" sx={{ height: '100vh', width: '100%' }} ref={mapRef}></Box>;
 };
 
 export default MainDashboard;
+
