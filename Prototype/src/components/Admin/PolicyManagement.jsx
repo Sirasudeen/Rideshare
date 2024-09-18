@@ -61,7 +61,7 @@ const PolicyManagement = () => {
           p: 4, // Increased padding
           marginLeft: sidebarOpen ? '240px' : '0',
           transition: 'margin-left 0.3s',
-          marginTop: '80px',
+          marginTop: '20px',
           backgroundColor: 'background.default',
           minHeight: '100vh',
         }}

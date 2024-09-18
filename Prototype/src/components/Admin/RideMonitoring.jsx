@@ -69,7 +69,7 @@ const RideMonitoringDashboard = () => {
 
   return (
     <Container>
-      <Box sx={{ mt: 4 }}>
+      <Box sx={{ mt: 2}}>
       <Sidebar open={sidebarOpen} onClose={toggleSidebar} onOpen={toggleSidebar} /> 
         <Typography variant="h4" gutterBottom>
           Ride Monitoring Dashboard

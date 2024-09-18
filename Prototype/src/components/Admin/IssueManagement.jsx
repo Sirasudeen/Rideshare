@@ -69,7 +69,7 @@ const IssueManagement = () => {
       <Sidebar open={sidebarOpen} onClose={toggleSidebar} onOpen={toggleSidebar} />
 
       {/* Main Content */}
-      <Box sx={{ display: "flex", flexGrow: 1, p: 3, mt: 10 }}>
+      <Box sx={{ display: "flex", flexGrow: 1, p: 3, mt: '20px' }}>
         {/* Issue List Section */}
         <Box sx={{ width: '50%', bgcolor: "#fff", p: 2, borderRadius: 1, boxShadow: 2, maxHeight: 'calc(100vh - 64px)', overflowY: 'auto' }}>
           <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold", color: "#333" }}>

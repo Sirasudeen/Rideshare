@@ -70,7 +70,7 @@ const Reports = () => {
   const totalRevenue = revenueData.reduce((acc, curr) => acc + curr.revenue, 0);
 
   return (
-    <Box sx={{ mt: 12 }}>
+    <Box sx={{ mt: 2 }}>
 
       <Sidebar open={sidebarOpen} onClose={toggleSidebar} onOpen={toggleSidebar} /> 
       <Box sx={{ flexGrow: 1, p: 3, marginLeft: sidebarOpen ? '240px' : '0', transition: 'margin-left 0.3s' }}>       

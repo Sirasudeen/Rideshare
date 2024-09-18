@@ -115,7 +115,7 @@ const Dashboard = () => {
           p: 3,
           transition: 'margin-left 0.3s ease',
           marginLeft: sidebarOpen ? '240px' : '0',
-          marginTop: '80px',
+          marginTop: '20px',
           bgcolor: '#F5F5F5',
         }}
       >

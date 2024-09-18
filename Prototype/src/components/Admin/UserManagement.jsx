@@ -114,7 +114,7 @@ const UserManagement = () => {
           p: 4,
           marginLeft: sidebarOpen ? '240px' : '0',
           transition: 'margin-left 0.3s',
-          marginTop: '80px',
+          marginTop: '20px',
           backgroundColor: '#f0f2f5',
           minHeight: '100vh',
         }}
