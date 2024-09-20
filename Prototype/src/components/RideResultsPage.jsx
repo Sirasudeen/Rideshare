@@ -10,13 +10,19 @@ const RideResultsPage = () => {
     const [rides, setRides] = useState([]);
     const [selectedRide, setSelectedRide] = useState(null);
     const [directionsResponse, setDirectionsResponse] = useState(null);
+    const[amount, setamount] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchRides = async () => {
             try {
                 const response = await axios.get('http://3.110.16.132:5100/match-ride/match'); 
-                setRides(response.data.post_data); 
+                console.log('API response:', response);  // Check what exactly you are receiving
+                console.log('Match Result:', JSON.stringify(response.data.match_result.amount, null, 2));
+                setRides(response.data.post_data);
+                setamount(response.data.match_result.amount);
+
+                // Format for better readability                setRides(response.data.post_data); 
             } catch (error) {
                 console.error('Error fetching rides:', error);
             }
@@ -140,7 +146,7 @@ const RideResultsPage = () => {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={() => navigate(`/ride-details/`, { state: { selectedRide } })}
+                                onClick={() => navigate(`/ride-details/`, { state: { selectedRide, amount} })}
                                 sx={{
                                     mt: 2,
                                     alignSelf: 'center',
