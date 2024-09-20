@@ -14,15 +14,25 @@ const RideResultsPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+
         const fetchRides = async () => {
+        const token = sessionStorage.getItem('jwt');
+        console.log(token);
+
             try {
-                const response = await axios.get('http://3.110.16.132:5100/match-ride/match'); 
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                };
+
+                const response = await axios.get('http://3.110.16.132:5100/match-ride/match',config,config); 
                 console.log('API response:', response);  // Check what exactly you are receiving
                 console.log('Match Result:', JSON.stringify(response.data.match_result.amount, null, 2));
                 setRides(response.data.post_data);
                 setamount(response.data.match_result.amount);
 
-                // Format for better readability                setRides(response.data.post_data); 
             } catch (error) {
                 console.error('Error fetching rides:', error);
             }
