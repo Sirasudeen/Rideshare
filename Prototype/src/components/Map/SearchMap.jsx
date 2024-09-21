@@ -144,7 +144,7 @@ const SearchRidePage = () => {
             </LoadScript>
         
             {/* Floating Form Section */}
-            <Box sx={{ position: 'absolute', top: '55%', left: '80%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(255, 255, 255, 0.9)', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', zIndex: 10, width: { xs: '100%', sm: '24rem' }, border: '1px solid', borderColor: 'grey.300' }}>
+            <Box sx={{ position: 'absolute', top: '55%', left: '80%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(255, 255, 255, 0.9)', padding: '20px', borderRadius: '8px', boxShadow: 3, zIndex: 10, width: { xs: '100%', sm: '24rem' }, border: '1px solid', borderColor: 'grey.300' }}>
                 <Typography variant="h6" sx={{fontSize:30 , fontFamily:'Poppins', fontWeight: 500}} gutterBottom>
                 SEEK A RIDE
                 </Typography>

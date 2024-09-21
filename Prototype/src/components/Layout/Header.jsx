@@ -86,7 +86,7 @@ function Header() {
                 backgroundColor: item.style.backgroundColor,
                 color: item.style.color,
                 '&:hover': {
-                  backgroundColor: item.id === 1 ? '#1e3a52' : '#f0f0f0',
+                  backgroundColor: item.id === 1 ? '#5B99C2' : '#f0f0f0',
                 },
               }}
             >
@@ -101,9 +101,6 @@ function Header() {
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
           <IconButton component={Link} to="/profile" sx={{ color: 'white', '&:hover': { color: '#90caf9' } }}>
             <Typography variant="body1" sx={{ fontFamily: 'New Amsterdam', fontSize: '23px' }}>Profile</Typography>
-          </IconButton>
-          <IconButton href="#" sx={{ color: 'white', '&:hover': { color: '#90caf9' } }}>
-            <Typography variant="body1" sx={{ fontFamily: 'New Amsterdam', fontSize: '23px' }}>Settings</Typography>
           </IconButton>
           {isLoggedIn() ? (
             <IconButton component={Link} to="/logout" sx={{ color: 'white', '&:hover': { color: '#90caf9' } }}>
@@ -164,9 +161,7 @@ function Header() {
               <IconButton component={Link} to="/profile" sx={{ color: 'white', mt: 2, '&:hover': { color: '#90caf9' } }}>
                 Profile
               </IconButton>
-              <IconButton href="#" sx={{ color: 'white', mt: 2, '&:hover': { color: '#90caf9' } }}>
-                Settings
-              </IconButton>
+
               {isLoggedIn() ? (
                 <IconButton component={Link} to="/logout" sx={{ color: 'white', mt: 2, '&:hover': { color: '#90caf9' } }}>
                   Logout

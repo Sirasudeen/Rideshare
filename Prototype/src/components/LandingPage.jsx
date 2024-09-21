@@ -81,8 +81,8 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundColor: '#052f54',
-    color: '#fff',
+    backgroundColor: '#B0BEC5',
+    color: '#001F3F',
     position: 'relative',
     overflow: 'hidden',
     textAlign: 'center',
@@ -101,7 +101,8 @@ const styles = {
     fontSize: '4rem',
     fontFamily: 'New Amsterdam, sans-serif',
     marginBottom: 2,
-    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.7)',
+    letterSpacing: 2
   },
   description: {
     fontSize: '1.25rem',
@@ -130,6 +131,7 @@ const styles = {
     borderRadius: '20px',
     '&:hover': {
       backgroundColor: '#ffffff22',
+      borderColor: "#507687"
     },
     fontFamily: 'Poppins, sans-serif',
     marginBottom: '2rem', // Space before the features section

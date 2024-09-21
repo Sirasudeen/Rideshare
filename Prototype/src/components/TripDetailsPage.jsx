@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Box, Typography, Button, Grid, CircularProgress, Divider } from '@mui/material';
 import { GoogleMap, LoadScript, Marker, DirectionsRenderer } from '@react-google-maps/api';
 import BookingConfirmationPopup from './BookingConfirmationPopup';
@@ -12,7 +12,8 @@ const TripDetails = () => {
     const [timeLeft, setTimeLeft] = useState(null);
     const [open, setOpen] = useState(false);
     const [bookedRide, setBookedRide] = useState(null); // State for booked ride data
-    const [amount, setAmount] = useState(null); // State for amount
+    const [amount, setAmount] = useState(null);
+    // State for amount
     // Load ride and user data from local storage
 
     useEffect(() => {
@@ -103,14 +104,14 @@ const TripDetails = () => {
                 }}>
                     <Typography className='Heading'>Trip Details</Typography>
                     <Divider sx={{ marginBottom: 2 }} />
-                    <Typography className='Primary'>From: {bookedRide?.from?.location}</Typography>
-                    <Typography className='Primary'>To: {bookedRide?.to?.location}</Typography>
-                    <Typography className='Primary'>Date: {bookedRide?.date}</Typography>
-                    <Typography className='Primary'>Time: {bookedRide?.time}</Typography>
-                    <Typography className='Primary'>Driving Style: {bookedRide?.drivingStyle}</Typography>
-                    <Typography className='Primary'>Seats Available: {bookedRide?.seats}</Typography>
-                    <Typography className='Primary'>Contact: {bookedRide?.email}</Typography>
-                    <Typography variant="h6" mt={2}>Amount to Pay: ₹{amount}</Typography>
+                    <Typography className='Primary'><strong>From: </strong>{bookedRide?.from?.location}</Typography>
+                    <Typography className='Primary'><strong>To: </strong>{bookedRide?.to?.location}</Typography>
+                    <Typography className='Primary'><strong>Date: </strong> {bookedRide?.date}</Typography>
+                    <Typography className='Primary'><strong>Time: </strong>{bookedRide?.time}</Typography>
+                    <Typography className='Primary'><strong>Driving Style: </strong> {bookedRide?.drivingStyle}</Typography>
+                    <Typography className='Primary'><strong>Seats Available: </strong> {bookedRide?.seats}</Typography>
+                    <Typography className='Primary'><strong>Contact: </strong> {bookedRide?.email}</Typography>
+                    <Typography variant="h6" mt={2}><strong>Amount to Pay: </strong> ₹{amount}</Typography>
 
                     <Box mt={2}>
                         {timeLeft > 30 ? (
@@ -177,7 +178,7 @@ const TripDetails = () => {
                         <Typography variant="subtitle1" align="center">
                             Real-time tracking will be available 30 minutes prior to the ride.
                         </Typography>
-                    </Box>
+                    </Box> 
                 </Grid>
             </Grid>
         </Box>
