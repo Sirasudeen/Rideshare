@@ -1,88 +1,144 @@
 import React, { useState } from 'react';
-import { Box, Button, Container, TextField, Typography } from '@mui/material';
-import { styled } from '@mui/system';
+import { Container, Typography, Card, CardContent, Button, Box, TextField, Grid, Divider } from '@mui/material';
 import Header from './Layout/Header';
 
-const StyledContainer = styled(Container)(({ theme }) => ({
-    padding: '40px',
-    backgroundColor: '#f9f9f9',
-    borderRadius: '10px',
-    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-    marginTop: '40px',
-    textAlign: 'center',
-}));
+const PaymentSummaryPage = ({ payment }) => {
+    const [cardDetails, setCardDetails] = useState({
+        cardNumber: '',
+        expiryDate: '',
+        cvv: '',
+        cardholderName: '',
+    });
 
-const StyledButton = styled(Button)(({ theme }) => ({
-    marginTop: '20px',
-    padding: '10px 20px',
-    fontSize: '16px',
-    borderRadius: '8px',
-    backgroundColor: theme.palette.primary.main,
-    '&:hover': {
-        backgroundColor: theme.palette.primary.dark,
-    },
-}));
-
-const FeedbackPage = () => {
-    const [rating, setRating] = useState(0);
-    const [comments, setComments] = useState('');
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setCardDetails({
+            ...cardDetails,
+            [name]: value,
+        });
+    };
 
     const handleSubmit = () => {
-        // Feedback submission logic
-        console.log('Feedback submitted:', { rating, comments });
+        // Handle form submission (e.g., validation and processing)
+        console.log('Submitted card details:', cardDetails);
     };
 
     return (
         <div>
             <Header />
-            <StyledContainer maxWidth="sm">
-                <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '30px' }}>
-                    We Value Your Feedback!
-                </Typography>
-                <Box sx={{ mb: 4 }}>
-                    <Typography variant="h6" sx={{ textAlign: 'left', mb: 1 }}>
-                        Rate your ride:
-                    </Typography>
-                    <TextField
-                        type="number"
-                        value={rating}
-                        onChange={(e) => setRating(e.target.value)}
-                        inputProps={{ min: 1, max: 5 }}
-                        label="Rating (1 to 5)"
-                        variant="outlined"
-                        fullWidth
-                        sx={{
-                            '& .MuiOutlinedInput-root': {
-                                borderRadius: '8px',
-                            },
-                        }}
-                    />
-                </Box>
-                <Box sx={{ mb: 4 }}>
-                    <Typography variant="h6" sx={{ textAlign: 'left', mb: 1 }}>
-                        Comments:
-                    </Typography>
-                    <TextField
-                        value={comments}
-                        onChange={(e) => setComments(e.target.value)}
-                        multiline
-                        rows={4}
-                        fullWidth
-                        variant="outlined"
-                        label="Share your experience"
-                        sx={{
-                            '& .MuiOutlinedInput-root': {
-                                borderRadius: '8px',
-                            },
-                        }}
-                    />
-                </Box>
-                <StyledButton variant="contained" onClick={handleSubmit}>
-                    Submit Feedback
-                </StyledButton>
-            </StyledContainer>
+            <Container maxWidth="sm" sx={{ mt: 4 }}>
+                <Card sx={{ boxShadow: 6, borderRadius: 3, p: 3, backgroundColor: '#f9f9f9' }}>
+                    <CardContent>
+                        <Typography 
+                            variant="h4" 
+                            component="h1" 
+                            gutterBottom 
+                            sx={{ fontWeight: 'bold', color: 'black' }}
+                        >
+                            Payment Summary
+                        </Typography>
+
+                        <Divider sx={{ my: 2 }} />
+
+                        <Typography variant="h6" component="p" sx={{ mt: 2, color: '#333' }}>
+                            <strong>Total Amount:</strong> ${payment?.amount || '25.00'}
+                        </Typography>
+
+                        <Typography variant="body1" component="p" sx={{ mt: 2, color: '#555' }}>
+                            <strong>Payment Method:</strong> {payment?.method || 'Credit Card'}
+                        </Typography>
+
+                        <Typography variant="body1" component="p" sx={{ mt: 2, color: '#555' }}>
+                            <strong>Transaction ID:</strong> {payment?.transactionId || 'XYZ123'}
+                        </Typography>
+
+                        {/* Input fields for card details */}
+                        <Box sx={{ mt: 4 }}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        label="Cardholder Name"
+                                        name="cardholderName"
+                                        value={cardDetails.cardholderName}
+                                        onChange={handleInputChange}
+                                        variant="outlined"
+                                        required
+                                        sx={{ backgroundColor: 'white' }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        label="Card Number"
+                                        name="cardNumber"
+                                        value={cardDetails.cardNumber}
+                                        onChange={handleInputChange}
+                                        variant="outlined"
+                                        required
+                                        inputProps={{ maxLength: 16 }}
+                                        sx={{ backgroundColor: 'white' }}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        fullWidth
+                                        label="Expiry Date (MM/YY)"
+                                        name="expiryDate"
+                                        value={cardDetails.expiryDate}
+                                        onChange={handleInputChange}
+                                        variant="outlined"
+                                        required
+                                        placeholder="MM/YY"
+                                        sx={{ backgroundColor: 'white' }}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        fullWidth
+                                        label="CVV"
+                                        name="cvv"
+                                        value={cardDetails.cvv}
+                                        onChange={handleInputChange}
+                                        variant="outlined"
+                                        required
+                                        inputProps={{ maxLength: 3 }}
+                                        sx={{ backgroundColor: 'white' }}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Box>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                            <Button
+                                variant="contained"
+                                size="large"
+                                onClick={handleSubmit}
+                                sx={{
+                                    borderRadius: '50px',
+                                    padding: '12px 35px',
+                                    backgroundColor: '#F5F5F5',
+                                    fontWeight: 'bold',
+                                    borderColor: 'black',
+                                    border: 0.2,
+                                    color: 'black',
+                                    textTransform: 'none',
+                                    boxShadow: '0px 4px 15px rgba(42, 133, 215, 0.3)',
+                                    '&:hover': {
+                                        backgroundColor: 'black',
+                                        color: 'white',
+                                        boxShadow: '0px 4px 20px rgba(30, 109, 187, 0.4)',
+                                    },
+                                }}
+                            >
+                                Confirm Payment
+                            </Button>
+                        </Box>
+                    </CardContent>
+                </Card>
+            </Container>
         </div>
     );
 };
 
-export default FeedbackPage;
+export default PaymentSummaryPage;
