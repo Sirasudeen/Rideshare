@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-/Authentication_Service/node_modules
+/Backend/Authentication_Service/node_modules
 # Custom
 /Trash 
 hours.txt
@@ -12,6 +12,7 @@ cert.pem
 key.pem
 signature.py
 /Documentation_and_Presentation
+/RAG*
 
 
 # C extensions
