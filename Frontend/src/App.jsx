@@ -22,6 +22,9 @@ import Layout from './components/Layout/Layout';
 import SearchMap from './components/Map/SearchMap';
 import PostMap from './components/Map/PostMap';
 import Developers from './Developers';
+import DeveloperDocs from './components/DeveleporDocs';
+import ApiDocs from './components/ApiDocs';
+import UserDocumentation from './components/UserDocumentation';
 
 const App = () => {
     return (
@@ -38,8 +41,12 @@ const App = () => {
                     <Route path="/logout" element={<Logout />} />
                     <Route path="/profile" element={<Profile />} />
 
+
                     {/* User Routes */}
                     <Route path="/home" element={<HomePage />} />
+                    <Route path="/apidocs" element={<ApiDocs />} />
+                    <Route path="/devdocs" element={<DeveloperDocs />} />
+                    <Route path="/userdocs" element={<UserDocumentation />} />
                     <Route path="/search-ride" element={<SearchMap />} />
                     <Route path="/ride-results" element={<RideResultsPage />} />
                     <Route path="/ride-details" element={<RideDetailsPage />} />
