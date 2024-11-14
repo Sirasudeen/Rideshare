@@ -25,15 +25,16 @@ const TripDetails = () => {
                         'Authorization': `Bearer ${sessionStorage.getItem('jwt')}`,
                       }
                 };
-                const response = await axios.get(`http://127.0.0.1:8000/ride/confirmed-ride/find`, config);
+                const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}:8000/ride/confirmed-ride/find`, config);
                 console.log(response.data);
 
+
+                sessionStorage.setItem('searchRide', JSON.stringify(response.data.searchRide));
                 sessionStorage.setItem('bookedRide', JSON.stringify(response.data.poster));
                 sessionStorage.setItem('amount', JSON.stringify(response.data.amount));
-            } catch (error) {
-                console.error("Error:", error);
-            }
-
+                } catch (error) {
+                    console.error("Error:", error);
+                }
             }
         }
         getData();
@@ -58,6 +59,7 @@ const TripDetails = () => {
         if (amountFromStorage) {
             setAmount(amountFromStorage);
         }
+        navigate('/trip-details');
     }, []);
     
     
@@ -83,9 +85,10 @@ const TripDetails = () => {
                 'Authorization': `Bearer ${sessionStorage.getItem('jwt')}`,
             }
         };
-        const response = await axios.post("http://127.0.0.1:8000/ride/confirmed-ride/delete", {}, config)
+        const response = await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:8000/ride/confirmed-ride/delete`, {}, config)
         console.log(response.data)
 
+        sessionStorage.removeItem('searchRide');
         sessionStorage.removeItem('bookedRide');
         sessionStorage.removeItem('amount');
 

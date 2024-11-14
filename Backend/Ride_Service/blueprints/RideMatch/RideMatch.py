@@ -4,16 +4,21 @@ from pymongo import MongoClient
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+from math import sqrt 
+
 load_dotenv()
 
-client = MongoClient("mongodb://127.0.0.1:27017/") # Keep it as local host in the production 
+client = MongoClient("mongodb://127.0.0.1:27017/")  # Keep it as localhost in production
 db = client['rideshare']
 search_collection = db['search_ride']
 post_collection = db['post_ride']
+confirmed_ride_collection = db['confirmed_ride']
 
 llm = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-ridematch_bp = Blueprint('ridematch',__name__)
+ridematch_bp = Blueprint('ridematch', __name__)
 
 @ridematch_bp.route("/")
 def main():
@@ -33,57 +38,157 @@ def get_recommendation(search_ride, posted_rides):
         - Distance: {search_ride['distance']} meters
 
         **Available Ride Offers:**
-        {''.join([f"{i+1}. Ride from {ride['from']['coordinates']} to {ride['to']['coordinates']} with _id {ride['_id']}, Date: {ride['date']}, Time: {ride['time']}, Driving Style: {ride['drivingStyle']}, Seats: {ride['seats']}" for i, ride in enumerate(posted_rides)])}
+        {''.join([f"{i+1}. Ride from {ride['from']['coordinates']} to {ride['to']['coordinates']} with _id {ride['_id']}, Date: {ride['date']}, Time: {ride['time']}, Driving Style: {ride['drivingStyle']}" for i, ride in enumerate(posted_rides)])}
 
-        Please provide a recommendation [based on the cosine similarity] on which of the available rides best matches the search route based on factors like the distance, date, and time. 
+        Please follow these steps:
+        
+        1. **Match Condition**: Only recommend rides where the source (from) and destination (to) coordinates EXACTLY match the search route.
+        
+        2. **Ranking**: Rank the matched rides based on their proximity to the search date and time (the closer, the better). For rides with similar date and time, give preference to those with shorter distances.
+        
+        3. **Price Calculation**: Calculate the price for each matched ride based on the formula: Rupees 12 per 1000 meters of distance traveled.
 
-        In addition, provide the price of the ride based on the distance and travel time with a base price of Rupees 12 per 1000 meters. 
-
-        Give it in the format of JSON as in the following:
-        """ + r"""
+        Provide the results in the following JSON format:"""
+        + r"""
         {
-            "1": <_id of best match>,
-            "2": <_id of next best match>,
-            ...... until the end,
-            "amount": <amount - amount is same because the search ride is same irrespective of the ride posts>
+            0: {_id: '_id', price: 0.002030969387400664, score: rank}
+            1: {_id: '_id', price: 0.002030969387400664, score: rank}
+            
         }
-
-        I want the above format, I don't need any other extra words, just the output in the above format. Strictly no other words.
+        Do not include any other explanations or comments, just the strict JSON output.
         """
     }]
-
     response = llm.chat.completions.create(
         model="gpt-4o-mini",
         messages=prompt,
         max_tokens=150
     )
-    
+
     return response
 
+
+def calculate_distance(coord1, coord2):
+    if isinstance(coord1, dict) and isinstance(coord2, dict):
+        return sqrt((coord1['lat'] - coord2['lat'])**2 + (coord1['lng'] - coord2['lng'])**2)
+    else:
+        raise ValueError("Coordinates must be in dictionary format with 'lat' and 'lng' keys")
+
+def calculate_price(distance):
+    return (distance) * 1200
+
+def cosine_similarity_score(ride1, ride2):
+    vector1 = np.array([ride1['from']['coordinates']['lat'], ride1['from']['coordinates']['lng'],
+                        ride1['to']['coordinates']['lat'], ride1['to']['coordinates']['lng']]).flatten()
+    vector2 = np.array([ride2['from']['coordinates']['lat'], ride2['from']['coordinates']['lng'],
+                        ride2['to']['coordinates']['lat'], ride2['to']['coordinates']['lng']]).flatten()
     
-@ridematch_bp.route("/match")
+    return cosine_similarity([vector1], [vector2])[0][0]
+
+def get_best_match(search_ride, posted_rides):
+    matches = []
+    search_distance = calculate_distance(search_ride['from']['coordinates'], search_ride['to']['coordinates'])
+    price = calculate_price(search_distance) # distance is present in search_data itself, update it fast
+    
+    for ride in posted_rides:
+        match_score = cosine_similarity_score(search_ride, ride)
+        
+        if match_score > 0.9:
+            matches.append({'_id': ride['_id'], 'score': match_score, 'price': price})
+
+    matches = sorted(matches, key=lambda x: x['score'], reverse=True)
+    result = {}
+    
+    for i, match in enumerate(matches):
+        result[str(i)] = {'_id': match['_id'], 'score': match['score'], 'price': match['price']}
+    return result
+
+    
+@ridematch_bp.route("/match", methods=["GET"])
 @jwt_required()
-def match():
-    try: 
+def get_searcher_match():
+    try:
         email = get_jwt_identity()
         search_data = search_collection.find_one({"email": email})
-        
+
         if not search_data:
             return jsonify({"Error": "User has not initiated any trip searches"})
-        
+
         search_data['_id'] = str(search_data['_id'])
-        
+
         post_data = post_collection.find()
         list_of_post_data = []
         for record in post_data:
-            record['_id'] = str(record['_id']) 
-            list_of_post_data.append(record) 
-            
+            record['_id'] = str(record['_id'])
+            list_of_post_data.append(record)
+
         recommendation = get_recommendation(search_data, list_of_post_data)
+
+        json_formatted_result = json.loads(recommendation.choices[0].message.content)
+
+        return jsonify({
+            "search_data": search_data,
+            "post_data": list_of_post_data,
+            "match_result": json_formatted_result
+        }), 200
+
+    except Exception as e:
+        try:
+            email = get_jwt_identity()
+            search_data = search_collection.find_one({"email": email})
+
+            if not search_data:
+                return jsonify({"Error": "User has not initiated any trip searches"})
+
+            search_data['_id'] = str(search_data['_id'])
+
+            post_data = post_collection.find()
+            list_of_post_data = []
+            for record in post_data:
+                record['_id'] = str(record['_id'])
+                list_of_post_data.append(record)
+                
+            matches = get_best_match(search_data, list_of_post_data)
+            
+            return jsonify({
+            "search_data": search_data,
+            "post_data": list_of_post_data,
+            "match_result": matches
+        }), 200
+        except Exception as e:
+            return jsonify({"Error": str(e)}), 500
+
+
+@ridematch_bp.route("/poster-match", methods=["GET"])
+@jwt_required()
+def get_poster_match():
+    try:
+        email = get_jwt_identity()
+        post_data = post_collection.find_one({"email": email})
+        if not post_data:
+            return jsonify({"Error": "User has not posted anything"})
         
-        json_formatted_result = json.loads(recommendation.choices[0].message.content) 
+        confirmed_rides = confirmed_ride_collection.find({"poster.email": email})
+        response = []
         
-        return jsonify({"search_data": search_data, "post_data": list_of_post_data, "match_result": json_formatted_result}), 200
-    
+        flag = 0
+            
+        for ride in confirmed_rides:
+            ride['_id'] = str(ride['_id'])  # for JSON serialization
+            ride['poster']['_id'] = str(ride['poster']['_id'])  # for JSON serialization
+            ride['searchRide']['_id'] = str(ride['searchRide']['_id'])  # for JSON serialization
+            
+            new_record = {}
+            if flag == 0:
+                new_record['poster'] = ride['poster']
+                flag += 1
+
+            new_record["search_details"] = ride["searchRide"] 
+            new_record["amount"] = ride["amount"] 
+            new_record["poster"] = ride["poster"] 
+            
+            response.append(new_record)
+
+        return jsonify({"matched_result": response}), 200
+
     except Exception as e:
         return jsonify({"Error": str(e)}), 500

@@ -18,7 +18,7 @@ const FeedbackPage = () => {
             };
             const post_data = JSON.parse(sessionStorage.getItem('bookedRide')); // this is the information about the poster
             try {
-                const response = await axios.post('http://127.0.0.1:8000/feedback/searcher/post', {
+                const response = await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:8000/feedback/searcher/post`, {
                     'poster': post_data.email,
                     'rating': rating,
                     'comments': comments
@@ -29,9 +29,10 @@ const FeedbackPage = () => {
             }
 
             try {
-                const response = await axios.post('http://127.0.0.1:8000/ride/confirmed-ride/delete', {}, config);
+                const response = await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:8000/ride/confirmed-ride/delete`, {}, config);
                 console.log(response.data);
 
+                sessionStorage.removeItem('searchRide');
                 sessionStorage.removeItem('bookedRide');
                 sessionStorage.removeItem('amount');
             } catch (error) {
@@ -51,9 +52,10 @@ const FeedbackPage = () => {
                   }
             };
             try {
-                const response = await axios.post('http://127.0.0.1:8000/ride/confirmed-ride/delete', {}, config);
+                const response = await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:8000/ride/confirmed-ride/delete`, {}, config);
                 console.log(response.data);
 
+                sessionStorage.removeItem('searchRide');
                 sessionStorage.removeItem('bookedRide');
                 sessionStorage.removeItem('amount');
             } catch (error) {

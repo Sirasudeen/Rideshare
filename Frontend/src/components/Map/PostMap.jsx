@@ -32,8 +32,8 @@ const PostRidePage = () => {
             return;
         }
 
-        const formattedDate = date ? date.toISOString().split('T')[0] : null;
-        const formattedTime = time ? time.toISOString().split('T')[1].split('.')[0] : null; 
+        const formattedDate = date ? date.toLocaleDateString('en-CA') : null;
+        const formattedTime = time ? time.toLocaleTimeString('en-GB', { hour12: false }) : null;
 
         const data = {
             from: {
@@ -61,13 +61,11 @@ const PostRidePage = () => {
                 },
             };
 
-            const response = await axios.post("http://127.0.0.1:8000/ride/post-ride/post", data, config);
+            const response = await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:8000/ride/post-ride/post`, data, config);
             console.log("Response:", response.data);
 
             if (response.status === 200) {
-                // Navigate to ride results page
-                // You might want to use React Router's navigate or history here
-                // e.g., navigate('/ride-results');
+                navigate('/post-ride-details');
             }
 
         } catch (error) {
@@ -121,7 +119,7 @@ const PostRidePage = () => {
                 <GoogleMap
                     mapContainerStyle={mapContainerStyle}
                     center={fromCoords || { lat: 12.979154, lng: 80.199172 }}
-                    zoom={10}
+                    zoom={12}
                 >
                     {fromCoords && <Marker position={fromCoords} />}
                     {toCoords && <Marker position={toCoords} />}

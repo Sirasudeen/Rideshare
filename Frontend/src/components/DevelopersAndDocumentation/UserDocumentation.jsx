@@ -1,6 +1,5 @@
 import React from "react";
 import { Box,Typography,Grid } from '@mui/material';
-import './doc.css';
 
 
 const styles = {

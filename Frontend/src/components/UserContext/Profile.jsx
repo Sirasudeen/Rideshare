@@ -1,158 +1,331 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Box,
-  Container,
-  Paper,
-  Typography,
-  Grid,
   Avatar,
-  Divider,
+  Box,
+  Button,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+  IconButton,
 } from '@mui/material';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import LocalTaxiIcon from '@mui/icons-material/LocalTaxi';
-import PhoneIcon from '@mui/icons-material/Phone';
-import EmailIcon from '@mui/icons-material/Email';
-import HomeIcon from '@mui/icons-material/Home';
+import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import { useSpring, animated } from '@react-spring/web';
 
-const AnimatedCounter = ({ value }) => {
-  const [count, setCount] = React.useState(0);
+// Define a local theme with improved typography and palette
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+    secondary: {
+      main: '#00bcd4',
+    },
+    background: {
+      default: '#f4f6f8',
+      paper: '#ffffff',
+    },
+    grey: {
+      200: '#e0e0e0',
+      300: '#d1d1d1',
+    },
+  },
+  typography: {
+    h4: {
+      fontWeight: 700,
+      fontSize: '2.2rem',
+      color: '#333333',
+    },
+    subtitle1: {
+      fontWeight: 500,
+      fontSize: '1.2rem',
+      color: '#555555',
+    },
+    body1: {
+      fontSize: '1rem',
+      color: '#666666',
+    },
+  },
+});
 
-  React.useEffect(() => {
-    let start = 0;
-    const end = value > 100 ? 100 : value;
-    if (start === end) return;
+// Styled Components
+const FullPageContainer = styled(Box)(({ theme }) => ({
+  minHeight: '100vh',
+  width: '100%',
+  background: '#B0BEC5',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: theme.spacing(4),
+}));
 
-    let totalDuration = 500;
-    let incrementTime = (totalDuration / end) * 1.5;
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(6),
+  maxWidth: 700,
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  borderRadius: theme.spacing(2),
+  backgroundColor: theme.palette.background.paper,
+  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+  transition: 'all 0.3s ease-in-out',
+}));
 
-    const timer = setInterval(() => {
-      start += 1;
-      setCount(start);
-      if (start === end) clearInterval(timer);
-    }, incrementTime);
-  }, [value]);
+const AvatarContainer = styled(Box)(({ theme }) => ({
+  position: 'relative',
+  marginBottom: theme.spacing(4),
+  '&:hover $EditButton': {
+    opacity: 1,
+    transform: 'scale(1.1)',
+  },
+}));
 
-  return (
-    <Typography variant="h3" component="div" fontWeight="bold" sx={{ color: '#000' }}>
-      {count}
-    </Typography>
-  );
-};
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+  width: theme.spacing(16),
+  height: theme.spacing(16),
+  backgroundColor: theme.palette.primary.main,
+  color: '#ffffff',
+  fontSize: '2.5rem',
+  fontWeight: 'bold',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+  transition: 'transform 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'scale(1.05)',
+  },
+}));
 
+const EditButton = styled(IconButton)(({ theme }) => ({
+  position: 'absolute',
+  bottom: 0,
+  right: 0,
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.grey[300]}`,
+  transition: 'all 0.3s ease-in-out',
+  opacity: 0,
+  transform: 'scale(1)',
+  '&:hover': {
+    backgroundColor: theme.palette.grey[200],
+  },
+}));
+
+const FormContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  marginTop: theme.spacing(2),
+}));
+
+const ActionButtons = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  marginTop: theme.spacing(4),
+  gap: theme.spacing(2),
+}));
+
+// Profile Component
 const Profile = () => {
-  const user = {
-    name: 'Tanush M M',
-    email: 'tanushmmofficial@gmail.com',
-    phone: '+91 1234567890',
-    address: '123 Main St, Springfield, USA',
-    rides: 23,
-    drives: 15,
+  // Hard-coded user data
+  const [user, setUser] = useState({
+    fullName: 'Sirasudeen',
+    email: 'sirasudeenp@gmail.com',
+    phoneNumber: '+91 2323244332',
+    address: 'Mens hostel,Crescent university, Chennai',
+    dateOfBirth: '2003-11-26',
+  });
+
+  // State to handle edit mode
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Handle input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
-  return (
-    <Box
-    sx={{
-      background: '#528ec1',
-      padding : 12
-    }}
-    >
-    <Container maxWidth="lg" >
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={6} padding='2px'>
-          <Paper
-            elevation={3}
-            sx={{
-              p: 4,
-              height: '100%',
-              backgroundColor: '#fafafa', 
-              color: '#000', 
-              boxShadow: 5,
-            }}
-          >
-            <Box display="flex" alignItems="center" mb={2}>
-              <Avatar
-                sx={{
-                  width: 80,
-                  height: 80,
-                  mr: 3,
-                  bgcolor: '#e3f2fd', 
-                  color: '#021526', 
-                }}
-              >
-                {user.name[0]}
-              </Avatar>
-              <Typography
-                variant="h4"
-                component="div"
-                fontWeight="bold"
-                sx={{ color: '#021526',  }} 
-              >
-                {user.name}
-              </Typography>
-            </Box>
-            <Divider sx={{ my: 2, bgcolor: '#cfd8dc' }} /> 
-            <Box display="flex" alignItems="center" mb={1}>
-              <EmailIcon sx={{ mr: 2, color: '#000' }} />
-              <Typography variant="body1" sx={{ fontSize: '1.1rem', color: '#021526' }}>
-                {user.email}
-              </Typography>
-            </Box>
-            <Box display="flex" alignItems="center" mb={1}>
-              <PhoneIcon sx={{ mr: 2, color: '#000' }} />
-              <Typography variant="body1" sx={{ fontSize: '1.1rem', color: '#021526' }}>
-                {user.phone}
-              </Typography>
-            </Box>
-            <Box display="flex" alignItems="center" mb={1}>
-              <HomeIcon sx={{ mr: 2, color: '#000' }} />
-              <Typography variant="body1" sx={{ fontSize: '1.1rem', color: '#021526' }}>
-                {user.address}
-              </Typography>
-            </Box>
-          </Paper>
-        </Grid>
+  // Toggle edit mode
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
+  };
 
-        <Grid item xs={12} md={6}>
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <Paper
-                elevation={3}
-                sx={{
-                  p: 4,
-                  backgroundColor: '#F6F5F5', 
-                  color: '#021526',
-                }}
-              >
-                <DirectionsCarIcon sx={{ fontSize: 60, color: '#021526' }} />
-                <Typography variant="h6" component="div" mt={2} sx={{ color: '#021526' }}>
-                  Total Drives
-                </Typography>
-                <AnimatedCounter value={user.drives} />
-                <LocalTaxiIcon sx={{ fontSize: 60, color: '#021526' }} />
-                <Typography variant="h6" component="div" mt={2} sx={{ color: '#021526' }}>
-                  Total Rides
-                </Typography>
-                <AnimatedCounter value={user.rides} />
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper
-                elevation={3}
-                sx={{
-                  p: 4,
-                  textAlign: 'center',
-                  backgroundColor: '#F6F5F5', 
-                  color: '#021526', 
-                }}
-              >
-                
-              </Paper>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Container>
-    </Box>
+  // Handle save action (for demonstration, it just toggles edit mode)
+  const handleSave = () => {
+    toggleEdit();
+    alert('Profile updated successfully!');
+  };
+
+  // Function to extract initials from full name
+  const getInitials = (name) => {
+    const names = name.trim().split(' ');
+    if (names.length === 0) return '';
+    if (names.length === 1) return names[0].charAt(0).toUpperCase();
+    const initials =
+      names[0].charAt(0).toUpperCase() +
+      names[names.length - 1].charAt(0).toUpperCase();
+    return initials;
+  };
+
+  // Animations for avatar and form elements
+  const avatarAnimation = useSpring({
+    from: { opacity: 0, transform: 'scale(0.8)' },
+    to: { opacity: 1, transform: 'scale(1)' },
+    config: { duration: 800 },
+  });
+
+  const formAnimation = useSpring({
+    from: { opacity: 0, transform: 'translateY(30px)' },
+    to: { opacity: 1, transform: 'translateY(0px)' },
+    delay: 300,
+  });
+
+  const buttonAnimation = useSpring({
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+    delay: 600,
+  });
+
+  return (
+    <ThemeProvider theme={theme}>
+      <FullPageContainer>
+        <StyledPaper elevation={3}>
+          <AvatarContainer>
+            <animated.div style={avatarAnimation}>
+              <StyledAvatar>{getInitials(user.fullName)}</StyledAvatar>
+            </animated.div>
+            {/* Edit Button */}
+            <EditButton onClick={toggleEdit} aria-label="edit profile">
+              <EditIcon />
+            </EditButton>
+          </AvatarContainer>
+          <Typography component="h1" variant="h4" gutterBottom>
+            {user.fullName}
+          </Typography>
+          <Typography variant="subtitle1" color="textSecondary" gutterBottom>
+            {user.email}
+          </Typography>
+          <FormContainer component="form" noValidate>
+            <animated.div style={formAnimation}>
+              <Grid container spacing={3}>
+                {/* Full Name */}
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Full Name"
+                    name="fullName"
+                    value={user.fullName}
+                    onChange={handleInputChange}
+                    InputProps={{
+                      readOnly: !isEditing,
+                    }}
+                    variant="outlined"
+                    size="medium"
+                  />
+                </Grid>
+
+                {/* Email Address */}
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Email Address"
+                    name="email"
+                    value={user.email}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    variant="outlined"
+                    size="medium"
+                  />
+                </Grid>
+
+                {/* Phone Number */}
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Phone Number"
+                    name="phoneNumber"
+                    value={user.phoneNumber}
+                    onChange={handleInputChange}
+                    InputProps={{
+                      readOnly: !isEditing,
+                    }}
+                    variant="outlined"
+                    size="medium"
+                  />
+                </Grid>
+
+                {/* Address */}
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Address"
+                    name="address"
+                    value={user.address}
+                    onChange={handleInputChange}
+                    InputProps={{
+                      readOnly: !isEditing,
+                    }}
+                    variant="outlined"
+                    size="medium"
+                  />
+                </Grid>
+
+                {/* Date of Birth */}
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Date of Birth"
+                    name="dateOfBirth"
+                    type="date"
+                    value={user.dateOfBirth}
+                    onChange={handleInputChange}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      readOnly: !isEditing,
+                    }}
+                    variant="outlined"
+                    size="medium"
+                  />
+                </Grid>
+              </Grid>
+            </animated.div>
+
+            {/* Action Buttons */}
+            <ActionButtons>
+              {isEditing ? (
+                <animated.div style={buttonAnimation}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<SaveIcon />}
+                    onClick={handleSave}
+                    size="large"
+                  >
+                    Save
+                  </Button>
+                </animated.div>
+              ) : (
+                <animated.div style={buttonAnimation}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<EditIcon />}
+                    onClick={toggleEdit}
+                    size="large"
+                  >
+                    Edit
+                  </Button>
+                </animated.div>
+              )}
+            </ActionButtons>
+          </FormContainer>
+        </StyledPaper>
+      </FullPageContainer>
+    </ThemeProvider>
   );
 };
 

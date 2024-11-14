@@ -1,4 +1,5 @@
 import { useState } from "react";
+import bcrypt from "bcryptjs";
 import {
   Container,
   Box,
@@ -24,13 +25,14 @@ const Admin = () => {
     console.log("Email:", email, "Password:", password);
 
     try {
-      const loginResponse = await axios.post("http://127.0.0.1:8000/authentication/login", {
-        email,
-        password,
+
+      const loginResponse = await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:8000/authentication/login`, {
+        email: email,
+        password: password,
       });
 
       if (loginResponse.status === 200) {
-        const jwtResponse = await axios.post("http://127.0.0.1:8000/authorization/getJWT", {
+        const jwtResponse = await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:8000/authorization/getJWT`, {
           jwt: email,
         });
 
@@ -39,6 +41,7 @@ const Admin = () => {
 
           sessionStorage.setItem("jwt", token);
           sessionStorage.setItem("privilage", "admin");
+          sessionStorage.setItem("email", email);
           console.log("JWT stored in sessionStorage:", token);
 
           navigate("/admin");
